@@ -1,0 +1,12 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+.max-w-small {
+    max-width: 150px;
+}
+
+.bg-custom-blue {
+    background: #0b103d;
+}
+
