@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CandidateController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,6 +16,10 @@ use Illuminate\Support\Facades\Route;
 
 Route::redirect('/', 'login');
 
-Route::view('/dashboard', 'dashboard')->middleware(['auth'])->name('dashboard');
+Route::middleware(['auth'])->group(function () {
+    Route::get('/candidates', [CandidateController::class, 'index'])->name('candidates');
+    Route::get('/candidates/create', [CandidateController::class, 'create'])->name('candidates.create');
+    Route::post('/candidates/store', [CandidateController::class, 'store'])->name('candidates.store');
+});
 
 require __DIR__.'/auth.php';
