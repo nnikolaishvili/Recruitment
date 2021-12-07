@@ -23,7 +23,6 @@ class Candidate extends Model
         'email',
         'min_salary',
         'max_salary',
-        'years_of_experience',
         'description',
         'education',
         'current_employer',
@@ -82,5 +81,25 @@ class Candidate extends Model
     public function skills(): BelongsToMany
     {
         return $this->belongsToMany(Skill::class);
+    }
+
+    /**
+     * Get CV full path attribute
+     *
+     * @return string|null
+     */
+    public function getCvFullPathAttribute(): ?string
+    {
+        return $this->cv_url ? config('app.url') . '/' . $this->cv_url : null;
+    }
+
+    public function getFullNameAttribute(): string
+    {
+        return "$this->first_name $this->last_name";
+    }
+
+    public function getCvNameAttribute(): ?string
+    {
+        return $this->cv_url ? basename($this->cv_url) : null;
     }
 }

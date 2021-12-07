@@ -10,6 +10,8 @@ class HiringStatus extends Model
 {
     use HasFactory;
 
+    const INITIAL = 1;
+
     /**
      * The attributes that are mass assignable.
      *

@@ -7,10 +7,8 @@ window.Alpine = Alpine;
 
 Alpine.start();
 
-$(function () {
-    $(document).ready(function() {
-        $('.js-example-basic-multiple').select2({
-            placeholder: "-- Choose Skills --"
-        });
+$(document).ready(function () {
+    $('.skills-select').select2({
+        placeholder: "-- Choose Skills --"
     });
-})
+});

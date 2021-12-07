@@ -20,6 +20,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/candidates', [CandidateController::class, 'index'])->name('candidates');
     Route::get('/candidates/create', [CandidateController::class, 'create'])->name('candidates.create');
     Route::post('/candidates/store', [CandidateController::class, 'store'])->name('candidates.store');
+    Route::get('/candidates/{candidate}/edit', [CandidateController::class, 'edit'])->name('candidates.edit');
+    Route::get('/candidates/{candidate}/cv', [CandidateController::class, 'downloadCv'])->name('candidates.download.cv');
 });
 
 require __DIR__.'/auth.php';
