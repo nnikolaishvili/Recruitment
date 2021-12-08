@@ -8,7 +8,7 @@
                             {{ $candidate->full_name }}
                         </h2>
 
-                        <a href="{{ route('candidates.index') }}"
+                        <a href="{{ url()->current() == url()->previous() ? route('candidates.index') : url()->previous() }}"
                                 class="w-1/7 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">
                             {{ __('Back') }}
                         </a>

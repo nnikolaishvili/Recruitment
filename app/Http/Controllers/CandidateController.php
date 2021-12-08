@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Candidate\{StatusChangeRequest, StoreRequest};
+use App\Http\Requests\Candidate\{SearchRequest, StatusChangeRequest, StoreRequest};
 use App\Models\{Candidate, CandidateSkill, HiringStatus, Position, Seniority, Skill};
 use App\Traits\FileUploadingTrait;
 use Illuminate\Contracts\View\View;
@@ -17,13 +17,23 @@ class CandidateController extends Controller
     /**
      * Candidates list
      *
+     * @param SearchRequest $request
      * @return View
      */
-    public function index(): View
+    public function index(SearchRequest $request): View
     {
-        $candidates = Candidate::with(['seniority', 'hiringStatus', 'skills'])->orderByDesc('id')->paginate(10);
+        $validated = $request->validated();
+        $searchValue = $validated['search'] ?? null;
+        $candidates = Candidate::with(['seniority', 'hiringStatus', 'skills'])
+            ->search($searchValue)
+            ->orderByDesc('id')
+            ->paginate(Candidate::ITEMS_PER_PAGE)
+            ->appends(['search' => $searchValue]);
 
-        return view('candidates.index', compact('candidates'));
+        return view('candidates.index', [
+            'candidates' => $candidates,
+            'searchValue' => $searchValue
+        ]);
     }
 
     /**
@@ -88,7 +98,8 @@ class CandidateController extends Controller
             'candidate' => $candidate,
             'statuses' => HiringStatus::pluck('name', 'id')->toArray(),
             'candidateStatusesCount' => $candidateStatuses->count(),
-            'candidateStatuses' => $candidateStatuses->orderByDesc('pivot_created_at')->paginate(10)
+            'candidateStatuses' => $candidateStatuses->orderByDesc('pivot_created_at')
+                ->paginate(HiringStatus::ITEMS_PER_PAGE)
         ]);
     }
 

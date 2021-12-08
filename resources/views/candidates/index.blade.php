@@ -14,7 +14,24 @@
                         </a>
                     </div>
 
-                    <table class="table-fixed min-w-full divide-y divide-gray-200 mt-6">
+                    <div class="w-full grid grid-cols-2 gap-4 py-4 px-2 bg-gray-50">
+                        <div></div>
+                        <div>
+                            <form action="" class="w-full flex">
+                                <input type="text" name="search" id="search"
+                                       class="mt-1 w-full shadow-sm sm:text-sm rounded-md mr-2 border-gray-100 focus:none"
+                                       placeholder="Search by name, email or phone number..." value="{{ $searchValue }}">
+                                <button type="submit"
+                                        class="py-2 px-4 border border-transparent
+                                                    shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700
+                                                    focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <table class="table-fixed min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
                         <tr>
                             <x-table-th>{{ __('Candidate') }}</x-table-th>

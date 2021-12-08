@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\SearchableTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -10,7 +11,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Candidate extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, SearchableTrait;
+
+    const ITEMS_PER_PAGE = 10;
 
     /**
      * The attributes that are mass assignable.
@@ -32,6 +35,18 @@ class Candidate extends Model
         'hiring_status_id',
         'linkedin_url',
         'cv_url'
+    ];
+
+    /**
+     * The searchable fields
+     *
+     * @var string[]
+     */
+    protected $searchable = [
+        'first_name',
+        'last_name',
+        'phone_number',
+        'email'
     ];
 
     /**

@@ -13,6 +13,8 @@ class HiringStatus extends Model
     const INITIAL = 1;
     const REJECTED = 5;
 
+    const ITEMS_PER_PAGE = 10;
+
     /**
      * The attributes that are mass assignable.
      *
