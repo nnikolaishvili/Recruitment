@@ -2,16 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CandidateStoreRequest;
-use App\Models\Candidate;
-use App\Models\HiringStatus;
-use App\Models\Position;
-use App\Models\Seniority;
-use App\Models\Skill;
+use App\Http\Requests\Candidate\{StatusChangeRequest, StoreRequest};
+use App\Models\{Candidate, CandidateSkill, HiringStatus, Position, Seniority, Skill};
 use App\Traits\FileUploadingTrait;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\{DB, Response};
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class CandidateController extends Controller
@@ -25,9 +21,7 @@ class CandidateController extends Controller
      */
     public function index(): View
     {
-        $candidates = Candidate::with(['seniority', 'hiringStatus', 'skills'])
-            ->orderByDesc('id')
-            ->paginate(10);
+        $candidates = Candidate::with(['seniority', 'hiringStatus', 'skills'])->orderByDesc('id')->paginate(10);
 
         return view('candidates.index', compact('candidates'));
     }
@@ -49,10 +43,10 @@ class CandidateController extends Controller
     /**
      * Store Candidate
      *
-     * @param CandidateStoreRequest $request
+     * @param StoreRequest $request
      * @return RedirectResponse
      */
-    public function store(CandidateStoreRequest $request): RedirectResponse
+    public function store(StoreRequest $request): RedirectResponse
     {
         $validated = $request->validated();
         $validated['hiring_status_id'] = HiringStatus::INITIAL;
@@ -64,10 +58,19 @@ class CandidateController extends Controller
         $candidate = Candidate::create($validated);
 
         if (isset($validated['skills'])) {
-            $candidate->skills()->attach($validated['skills']);
+            $skills = [];
+            foreach ($validated['skills'] as $skill) {
+                $skills[] = [
+                    'candidate_id' => $candidate->id,
+                    'skill_id' => $skill,
+                    'created_at' => now(),
+                    'updated_at' => now()
+                ];
+            }
+            CandidateSkill::insert($skills);
         }
 
-        return redirect()->route('candidates');
+        return redirect()->route('candidates.index');
     }
 
     /**
@@ -78,7 +81,15 @@ class CandidateController extends Controller
      */
     public function edit(Candidate $candidate): View
     {
-        return view('candidates.edit', compact('candidate'));
+        $candidate = $candidate->load(['hiringStatuses', 'position']);
+        $candidateStatuses = $candidate->hiringStatuses();
+
+        return view('candidates.edit', [
+            'candidate' => $candidate,
+            'statuses' => HiringStatus::pluck('name', 'id')->toArray(),
+            'candidateStatusesCount' => $candidateStatuses->count(),
+            'candidateStatuses' => $candidateStatuses->orderByDesc('pivot_created_at')->paginate(10)
+        ]);
     }
 
     /**
@@ -90,5 +101,45 @@ class CandidateController extends Controller
     public function downloadCv(Candidate $candidate): BinaryFileResponse|RedirectResponse
     {
         return Response::download(public_path($candidate->cv_url));
+    }
+
+    /**
+     * Update status
+     *
+     * @param Candidate $candidate
+     * @param StatusChangeRequest $request
+     * @return RedirectResponse
+     */
+    public function updateStatus(Candidate $candidate, StatusChangeRequest $request): RedirectResponse
+    {
+        $validated = $request->validated();
+
+        if ($validated['hiring_status_id'] == $candidate->hiring_status_id) {
+            return back()->withErrors(['current' => 'The selected status is the current one']);
+        }
+
+        DB::transaction(function () use ($validated, $candidate) {
+            $candidate->update([
+                'hiring_status_id' => $validated['hiring_status_id']
+            ]);
+
+            $candidate->hiringStatuses()
+                ->attach($validated['hiring_status_id'], ['comment' => $validated['comment']]);
+        });
+
+        return redirect()->back();
+    }
+
+    /**
+     * Soft delete candidate
+     *
+     * @param Candidate $candidate
+     * @return RedirectResponse
+     */
+    public function destroy(Candidate $candidate): RedirectResponse
+    {
+        $candidate->delete();
+
+        return redirect()->route('candidates.index');
     }
 }

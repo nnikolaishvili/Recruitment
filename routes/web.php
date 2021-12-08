@@ -17,11 +17,14 @@ use Illuminate\Support\Facades\Route;
 Route::redirect('/', 'login');
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('/candidates', [CandidateController::class, 'index'])->name('candidates');
-    Route::get('/candidates/create', [CandidateController::class, 'create'])->name('candidates.create');
-    Route::post('/candidates/store', [CandidateController::class, 'store'])->name('candidates.store');
-    Route::get('/candidates/{candidate}/edit', [CandidateController::class, 'edit'])->name('candidates.edit');
-    Route::get('/candidates/{candidate}/cv', [CandidateController::class, 'downloadCv'])->name('candidates.download.cv');
+    Route::prefix('/candidates/{candidate}')->name('candidates.')->group(function () {
+        Route::get('/cv', [CandidateController::class, 'downloadCv'])->name('download.cv');
+        Route::post('/', [CandidateController::class, 'updateStatus'])->name('status.update');
+    });
+
+    Route::resource('candidates', CandidateController::class)->only([
+       'index', 'create', 'store', 'edit', 'destroy'
+    ]);
 });
 
 require __DIR__.'/auth.php';

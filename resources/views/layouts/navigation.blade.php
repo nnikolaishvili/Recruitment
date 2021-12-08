@@ -2,9 +2,10 @@
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
-            <div class="flex">
+            <a href="{{ route('candidates.index') }}" class="flex">
                 <x-application-logo></x-application-logo>
-            </div>
+            </a>
+
             <!-- Settings Dropdown -->
             <div class="flex items-center ml-6">
                 <x-dropdown align="right" width="48">

@@ -26,6 +26,6 @@ class Skill extends Model
      */
     public function candidates(): BelongsToMany
     {
-        return $this->belongsToMany(Candidate::class);
+        return $this->belongsToMany(Candidate::class)->using(CandidateSkill::class);
     }
 }

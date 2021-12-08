@@ -11,6 +11,7 @@ class HiringStatus extends Model
     use HasFactory;
 
     const INITIAL = 1;
+    const REJECTED = 5;
 
     /**
      * The attributes that are mass assignable.
@@ -28,6 +29,6 @@ class HiringStatus extends Model
      */
     public function candidates(): BelongsToMany
     {
-        return $this->belongsToMany(Candidate::class)->withPivot('comment');
+        return $this->belongsToMany(Candidate::class)->withPivot('comment')->withTimestamps();
     }
 }

@@ -13,3 +13,35 @@
 .bg-custom-pink {
     background: #e64353
 }
+
+.select2-container--default .select2-selection--multiple {
+    padding-bottom: 8px !important;
+    border: 1px solid rgba(209, 213, 219) !important;
+}
+
+.select2-container--default.select2-container--focus .select2-selection--multiple {
+    border: 1px solid rgb(104, 117, 245) !important;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice {
+    border: none !important;
+    font-size: 15px !important;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice__display {
+    font-size: 13px !important;
+    padding-left: 5px !important;
+    padding-right: 10px !important;
+}
+
+.select2-results__option {
+    font-size: 15px !important;
+}
+
+.select2-container--default .select2-results__option--highlighted.select2-results__option--selectable {
+    background-color: rgba(88, 80, 236) !important;
+}
+
+.select2-container--default .select2-results__option--selected {
+    background-color: rgba(243, 244, 246) !important;
+}
