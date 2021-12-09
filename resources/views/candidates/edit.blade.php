@@ -13,7 +13,6 @@
                             {{ __('Back') }}
                         </a>
                     </div>
-
                     <div class="w-full flex">
                         <div class="w-2/3 border-r-2">
                             <div class="flex justify-between items-center px-4 py-5 sm:px-6">
@@ -187,7 +186,7 @@
                                             <dd>
                                                 <button type="submit"
                                                         class="w-1/2 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                                    {{ __('Save') }}
+                                                    {{ __('Update') }}
                                                 </button>
                                             </dd>
                                         </div>
@@ -206,16 +205,16 @@
                                     </p>
                                 </div>
                                 <div>
-                                    @if ($candidateStatusesCount)
+                                    @if ($candidateStatuses->total())
                                         <span
                                             class="inline-flex items-center justify-center px-3 py-2 mr-2 text-xs font-bold leading-none text-indigo-100 bg-indigo-600 rounded-full">
-                                        {{ $candidateStatusesCount }}
+                                        {{ $candidateStatuses->total() }}
                                     </span>
                                     @endif
                                 </div>
                             </div>
                             <div class="border-t border-gray-200">
-                                @if (!$candidateStatusesCount)
+                                @if (!$candidateStatuses->total())
                                     <div class="px-4 py-5 sm:px-6">
                                         <div class="mt-1 text-md text-gray-900 sm:mt-0 sm:col-span-20">
                                             {{ __('No status changes') }}

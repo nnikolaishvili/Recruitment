@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\HiringStatus;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Cache;
 
 class HiringStatusesTableSeeder extends Seeder
 {
@@ -14,44 +15,27 @@ class HiringStatusesTableSeeder extends Seeder
      */
     public function run()
     {
-        $data = [
-            [
-                'id' => 1,
-                'name' => 'Initial',
-                'created_at' => now(),
-                'updated_at' => now()
-            ],
-            [
-                'id' => 2,
-                'name' => 'First Contact',
-                'created_at' => now(),
-                'updated_at' => now()
-            ],
-            [
-                'id' => 3,
-                'name' => 'Interview',
-                'created_at' => now(),
-                'updated_at' => now()
-            ],
-            [
-                'id' => 4,
-                'name' => 'Tech Assignment',
-                'created_at' => now(),
-                'updated_at' => now()
-            ],
-            [
-                'id' => 5,
-                'name' => 'Rejected',
-                'created_at' => now(),
-                'updated_at' => now()
-            ],
-            [
-                'id' => 6,
-                'name' => 'Hired',
-                'created_at' => now(),
-                'updated_at' => now()
-            ]
+        $hiringStatuses = [
+            'Initial',
+            'First Contact',
+            'Interview',
+            'Tech Assignment',
+            'Rejected',
+            'Hired',
         ];
-        HiringStatus::insert($data);
+
+        $hiringStatusesInsertData = [];
+
+        foreach ($hiringStatuses as $hiringStatus) {
+            $hiringStatusesInsertData [] = [
+                'name' => $hiringStatus,
+                'created_at' => now(),
+                'updated_at' => now()
+            ];
+        }
+
+        HiringStatus::insert($hiringStatusesInsertData);
+
+        Cache::forever('hiring-statuses', HiringStatus::all());
     }
 }

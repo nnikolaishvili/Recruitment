@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Position;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Cache;
 
 class PositionsTableSeeder extends Seeder
 {
@@ -14,62 +15,30 @@ class PositionsTableSeeder extends Seeder
      */
     public function run()
     {
-        $data = [
-            [
-                'id' => 1,
-                'name' => 'Back-end Developer',
-                'created_at' => now(),
-                'updated_at' => now()
-            ],
-            [
-                'id' => 2,
-                'name' => 'Front-end Developer',
-                'created_at' => now(),
-                'updated_at' => now()
-            ],
-            [
-                'id' => 3,
-                'name' => 'Full-stack Developer',
-                'created_at' => now(),
-                'updated_at' => now()
-            ],
-            [
-                'id' => 4,
-                'name' => 'Data Scientist',
-                'created_at' => now(),
-                'updated_at' => now()
-            ],
-            [
-                'id' => 5,
-                'name' => 'DevOps / System Administrator',
-                'created_at' => now(),
-                'updated_at' => now()
-            ],
-            [
-                'id' => 6,
-                'name' => 'QA Tester',
-                'created_at' => now(),
-                'updated_at' => now()
-            ],
-            [
-                'id' => 7,
-                'name' => 'UI / UX Designer',
-                'created_at' => now(),
-                'updated_at' => now()
-            ],
-            [
-                'id' => 8,
-                'name' => 'Project Manager',
-                'created_at' => now(),
-                'updated_at' => now()
-            ],
-            [
-                'id' => 9,
-                'name' => 'Human Resources',
-                'created_at' => now(),
-                'updated_at' => now()
-            ]
+        $positions = [
+            'Back-end Developer',
+            'Front-end Developer',
+            'Full-stack Developer',
+            'Data Scientist',
+            'DevOps / System Administrator',
+            'QA Tester',
+            'UI / UX Designer',
+            'Project Manager',
+            'Human Resources',
         ];
-        Position::insert($data);
+
+        $positionInsertData = [];
+
+        foreach ($positions as $position) {
+            $positionInsertData [] = [
+                'name' => $position,
+                'created_at' => now(),
+                'updated_at' => now()
+            ];
+        }
+
+        Position::insert($positionInsertData);
+
+        Cache::forever('positions', Position::all());
     }
 }

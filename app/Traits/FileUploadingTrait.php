@@ -10,15 +10,15 @@ trait FileUploadingTrait
     /**
      * Upload CV
      *
-     * @param $uploadedCv
+     * @param $file
      * @return string
      */
-    public function uploadPdf($uploadedCv): string
+    public function uploadCv($file): string
     {
         return Storage::disk('public')->putFileAs(
             "cv/" . Str::random(10),
-            $uploadedCv,
-            $uploadedCv->getClientOriginalName()
+            $file,
+            $file->getClientOriginalName()
         );
     }
 }

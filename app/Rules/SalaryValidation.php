@@ -9,17 +9,15 @@ class SalaryValidation implements Rule
     const MIN_SALARY = 'min_salary';
     const MAX_SALARY = 'max_salary';
 
-    protected $secondSalary;
-    protected $message;
+    protected string $message;
 
     /**
      * Create a new rule instance.
      *
      * @return void
      */
-    public function __construct($salary)
+    public function __construct(protected $secondSalary)
     {
-        $this->secondSalary = $salary;
     }
 
     /**
@@ -31,18 +29,20 @@ class SalaryValidation implements Rule
      */
     public function passes($attribute, $value): bool
     {
-        if ($attribute == self::MIN_SALARY && !is_null($this->secondSalary)) {
-            if ($value > $this->secondSalary) {
-                $this->message = "The min salary must be less than or equal to $this->secondSalary";
+        if (is_null($this->secondSalary)) {
+            return true;
+        }
 
-                return false;
-            }
-        } elseif ($attribute == self::MAX_SALARY && !is_null($this->secondSalary)) {
-            if ($value <= $this->secondSalary) {
-                $this->message = "The max salary must be greater than $this->secondSalary";
+        if ($attribute === self::MIN_SALARY && $value > $this->secondSalary) {
+            $this->message = "The min salary must be less than or equal to $this->secondSalary";
 
-                return false;
-            }
+            return false;
+        }
+
+        if ($attribute === self::MAX_SALARY && $value <= $this->secondSalary) {
+            $this->message = "The max salary must be greater than $this->secondSalary";
+
+            return false;
         }
 
         return true;
@@ -55,6 +55,6 @@ class SalaryValidation implements Rule
      */
     public function message(): string
     {
-        return $this->message ?? 'The validation error';
+        return $this->message;
     }
 }

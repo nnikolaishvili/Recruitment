@@ -16,13 +16,11 @@
             <div>
                 <x-label for="email" :value="__('Email')"/>
 
-                <input type="email" name="email" id="email"
-                       class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm
-                        {{ $errors->has('email') ? 'border-red-500' : 'border-gray-300' }}
-                           rounded-md" value="{{ old('email') }}" required autofocus>
+                <x-input type="email" name="email" id="email" :value="old('email')"
+                         class="{{ $errors->has('email') ? 'border-red-500' : 'border-gray-300' }}" required autofocus/>
+
                 @error('email')
-                <span
-                    class="mt-3 list-disc list-inside text-sm text-red-600">{{ $message }}</span>
+                <x-error-message>{{ $message }}</x-error-message>
                 @enderror
             </div>
 
@@ -30,13 +28,11 @@
             <div class="mt-4">
                 <x-label for="password" :value="__('Password')"/>
 
-                <input type="password" name="password" id="password"
-                       class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm
-                        {{ $errors->has('password') ? 'border-red-500' : 'border-gray-300' }}
-                           rounded-md" required>
+                <x-input type="password" name="password" id="password"
+                         class="{{ $errors->has('password') ? 'border-red-500' : 'border-gray-300' }}" required/>
+
                 @error('password')
-                <span
-                    class="mt-3 list-disc list-inside text-sm text-red-600">{{ $message }}</span>
+                <x-error-message>{{ $message }}</x-error-message>
                 @enderror
             </div>
 

@@ -7,7 +7,7 @@ use App\Models\{Candidate, CandidateSkill, HiringStatus, Position, Seniority, Sk
 use App\Traits\FileUploadingTrait;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\{DB, Response};
+use Illuminate\Support\Facades\{Cache, DB, Response};
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class CandidateController extends Controller
@@ -23,7 +23,7 @@ class CandidateController extends Controller
     public function index(SearchRequest $request): View
     {
         $validated = $request->validated();
-        $searchValue = $validated['search'] ?? null;
+        $searchValue = $validated['search'] ?? '';
         $candidates = Candidate::with(['seniority', 'hiringStatus', 'skills'])
             ->search($searchValue)
             ->orderByDesc('id')
@@ -44,9 +44,9 @@ class CandidateController extends Controller
     public function create(): View
     {
         return view('candidates.create', [
-            'positions' => Position::pluck('name', 'id')->toArray(),
-            'seniorities' => Seniority::pluck('name', 'id')->toArray(),
-            'skills' => Skill::pluck('name', 'id')->toArray()
+            'positions' => Cache::getOrSet('positions', Position::class),
+            'seniorities' => Cache::getOrSet('seniorities', Seniority::class),
+            'skills' => Cache::getOrSet('skills', Skill::class)
         ]);
     }
 
@@ -59,15 +59,16 @@ class CandidateController extends Controller
     public function store(StoreRequest $request): RedirectResponse
     {
         $validated = $request->validated();
-        $validated['hiring_status_id'] = HiringStatus::INITIAL;
 
         if (isset($validated['cv'])) {
-            $validated['cv_url'] = 'storage/' . $this->uploadPdf($validated['cv']);
+            $validated['cv_url'] = 'storage/' . $this->uploadCv($validated['cv']);
         }
 
         $candidate = Candidate::create($validated);
 
         if (isset($validated['skills'])) {
+            //  attach() method runs separate queries in DB for each skill, whereas insert() runs 1 query
+            //  $candidate->skills()->attach($skills);
             $skills = [];
             foreach ($validated['skills'] as $skill) {
                 $skills[] = [
@@ -91,14 +92,11 @@ class CandidateController extends Controller
      */
     public function edit(Candidate $candidate): View
     {
-        $candidate = $candidate->load(['hiringStatuses', 'position']);
-        $candidateStatuses = $candidate->hiringStatuses();
-
         return view('candidates.edit', [
-            'candidate' => $candidate,
-            'statuses' => HiringStatus::pluck('name', 'id')->toArray(),
-            'candidateStatusesCount' => $candidateStatuses->count(),
-            'candidateStatuses' => $candidateStatuses->orderByDesc('pivot_created_at')
+            'candidate' => $candidate->load('position'),
+            'statuses' => Cache::getOrSet('hiring-statuses', HiringStatus::class),
+            'candidateStatuses' => $candidate->hiringStatuses()
+                ->orderByDesc('pivot_created_at')
                 ->paginate(HiringStatus::ITEMS_PER_PAGE)
         ]);
     }
@@ -125,7 +123,7 @@ class CandidateController extends Controller
     {
         $validated = $request->validated();
 
-        if ($validated['hiring_status_id'] == $candidate->hiring_status_id) {
+        if ($validated['hiring_status_id'] === $candidate->hiring_status_id) {
             return back()->withErrors(['current' => 'The selected status is the current one']);
         }
 

@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Seniority;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Cache;
 
 class SenioritiesTableSeeder extends Seeder
 {
@@ -14,38 +15,25 @@ class SenioritiesTableSeeder extends Seeder
      */
     public function run()
     {
-        $data = [
-            [
-                'id' => 1,
-                'name' => 'Intern',
-                'created_at' => now(),
-                'updated_at' => now()
-            ],
-            [
-                'id' => 2,
-                'name' => 'Junior',
-                'created_at' => now(),
-                'updated_at' => now()
-            ],
-            [
-                'id' => 3,
-                'name' => 'Middle',
-                'created_at' => now(),
-                'updated_at' => now()
-            ],
-            [
-                'id' => 4,
-                'name' => 'Senior',
-                'created_at' => now(),
-                'updated_at' => now()
-            ],
-            [
-                'id' => 5,
-                'name' => 'Lead',
-                'created_at' => now(),
-                'updated_at' => now()
-            ]
+        $seniorities = [
+            'Intern',
+            'Junior',
+            'Middle',
+            'Senior',
+            'Lead',
         ];
-        Seniority::insert($data);
+        $senioritiesInsertData = [];
+
+        foreach ($seniorities as $seniority) {
+            $senioritiesInsertData [] = [
+                'name' => $seniority,
+                'created_at' => now(),
+                'updated_at' => now()
+            ];
+        }
+
+        Seniority::insert($senioritiesInsertData);
+
+        Cache::forever('seniorities', Seniority::all());
     }
 }

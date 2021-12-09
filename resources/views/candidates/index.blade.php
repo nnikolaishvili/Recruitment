@@ -3,16 +3,8 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="bg-white border-b border-gray-200">
-                    <div class="flex justify-between items-center bg-custom-blue p-3">
-                        <h2 class="text-md pl-3 font-bold text-white">
-                            {{ __('Candidates') }}
-                        </h2>
-
-                        <a href="{{ route('candidates.create') }}"
-                           class="w-1/7 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">
-                            {{ __('New Candidate') }}
-                        </a>
-                    </div>
+                    <x-header :text="'Candidates'" :link="route('candidates.create')"
+                              :linkText="'New Candidate'"></x-header>
 
                     <div class="w-full grid grid-cols-2 gap-4 py-4 px-2 bg-gray-50">
                         <div></div>
@@ -20,7 +12,8 @@
                             <form action="" class="w-full flex">
                                 <input type="text" name="search" id="search"
                                        class="mt-1 w-full shadow-sm sm:text-sm rounded-md mr-2 border-gray-100 focus:none"
-                                       placeholder="Search by name, email or phone number..." value="{{ $searchValue }}">
+                                       placeholder="Search by name, email or phone number..."
+                                       value="{{ $searchValue }}">
                                 <button type="submit"
                                         class="py-2 px-4 border border-transparent
                                                     shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700
@@ -45,52 +38,45 @@
                         <tbody class="bg-white divide-y divide-gray-200">
                         @forelse($candidates as $candidate)
                             <tr>
-                                <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-900">
+                                <x-table-td>
                                     <div>
                                         {{ $candidate->full_name }}
                                     </div>
                                     <div class="text-gray-500 mt-1">
                                         {{ $candidate->seniority->name . ' | ' . $candidate->current_employer }}
                                     </div>
-                                </td>
-                                <td class="py-2 px-6 whitespace-nowrap text-sm text-gray-900">
+                                </x-table-td>
+                                <x-table-td>
                                     <div>
                                         {{ $candidate->phone_number }}
                                     </div>
                                     <div class="text-gray-500 mt-1">
                                         {{ $candidate->email }}
                                     </div>
-                                </td>
+                                </x-table-td>
                                 <td class="py-2 px-6">
                                     @if (!$candidate->skills->count())
                                         <span class="text-sm">{{ __('No skills') }}</span>
                                     @else
                                         <div style="max-width: 250px; display: flex; flex-wrap: wrap;">
                                             @foreach ($candidate->skills as $skill)
-                                                <span class="inline-block rounded-full text-white
-                                            bg-pink-400 hover:bg-pink-500 duration-300
-                                            text-xs font-bold
-                                            mr-1 md:mr-1 mb-1 px-2 md:px-4 py-1
-                                            opacity-90 hover:opacity-100">
-                                            {{ $skill->name }}
-                                        </span>
+                                                <x-badge class="bg-pink-400 hover:bg-pink-500">
+                                                    {{ $skill->name }}
+                                                </x-badge>
                                             @endforeach
                                         </div>
                                     @endif
                                 </td>
-                                <td class="py-2 px-6 whitespace-nowrap text-sm text-gray-900">
+                                <x-table-td>
                                     {{ $candidate->salary_range }}
-                                </td>
-                                <td class="py-2 px-6 whitespace-nowrap text-sm text-gray-900">
-                                    <span class="inline-block rounded-full text-white
-                                        {{ $candidate->isRejected() ? 'bg-red-400 hover:bg-red-500' : 'bg-green-400 hover:bg-green-500' }} duration-300
-                                        text-xs font-bold
-                                        mr-1 md:mr-2 mb-2 px-2 md:px-4 py-1
-                                        opacity-90 hover:opacity-100">
+                                </x-table-td>
+                                <x-table-td>
+                                    <x-badge
+                                        class="{{ $candidate->isRejected() ? 'bg-red-400 hover:bg-red-500' : 'bg-green-400 hover:bg-green-500' }}">
                                         {{ $candidate->hiringStatus->name }}
-                                    </span>
-                                </td>
-                                <td class="py-2 px-6 whitespace-nowrap text-sm text-gray-900">
+                                    </x-badge>
+                                </x-table-td>
+                                <x-table-td>
                                     <a href="{{ route('candidates.edit', $candidate->id) }}">
                                         <svg class="-ml-1 mr-2 h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg"
                                              viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -98,7 +84,7 @@
                                                 d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"/>
                                         </svg>
                                     </a>
-                                </td>
+                                </x-table-td>
                             </tr>
                         @empty
                             <tr>

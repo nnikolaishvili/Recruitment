@@ -18,7 +18,7 @@ class UsersTableSeeder extends Seeder
             'name' => 'HR',
             'email' => 'hr@test.com',
             'email_verified_at' => now(),
-            'password' => 'password123' // check model "creating" event
+            'password' => bcrypt('password123')
         ]);
     }
 }
