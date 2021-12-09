@@ -2,8 +2,6 @@
 
 ## Tech Assignment Setup Instructions
 
----
-
 ### Requirements
 
 | Stack | Minimum Version |
