@@ -67,7 +67,7 @@
                                         </dd>
                                     </div>
                                     <form action="{{ route('candidates.status.update', $candidate->id) }}"
-                                          method="POST">
+                                          method="POST" id="status-update">
                                         @csrf
 
                                         <div class="bg-gray-50 px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
@@ -77,7 +77,8 @@
                                             <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                                                 <select id="hiring_status_id" name="hiring_status_id"
                                                         class="block w-1/3 px-3 border {{ $errors->has('hiring_status_id') || $errors->has('current') ? 'border-red-500' : 'border-gray-300' }}
-                                                            bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                                            bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                                            data-current_status="{{ $candidate->hiring_status_id }}">
                                                     @foreach($statuses as $id => $name)
                                                         <option value="{{ $id }}"
                                                                 @if($id == $candidate->hiring_status_id) selected @endif>{{ $name }}</option>
@@ -102,7 +103,7 @@
                                             </dt>
                                             <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                                                 <x-textarea id="comment" name="comment"
-                                                            class="{{ $errors->has('comment') ? 'border-red-500' : 'border-gray-300' }}"
+                                                            class="bg-gray-100 {{ $errors->has('comment') ? 'border-red-500' : 'border-gray-300' }}" disabled
                                                             placeholder="What was the reason for status change?">{{ old('comment') }}</x-textarea>
 
                                                 @error('comment')

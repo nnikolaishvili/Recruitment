@@ -20,4 +20,13 @@ $(document).ready(function () {
     $('#delete-candidate').on('submit', function () {
        return confirm('Are you sure?')
     });
+
+    $('#status-update #hiring_status_id').on('change', function () {
+        if ($(this).attr('data-current_status') === $(this).val()) {
+            $('#status-update #comment').addClass('bg-gray-100')
+            $('#status-update #comment').attr('disabled', true);
+        } else {
+            $('#status-update #comment').removeClass('bg-gray-100').removeAttr('disabled');
+        }
+    })
 });

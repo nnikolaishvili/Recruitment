@@ -31,6 +31,7 @@
                             <x-table-th>{{ __('Contact Info') }}</x-table-th>
                             <x-table-th>{{ __('Skills') }}</x-table-th>
                             <x-table-th>{{ __('Salary Range') }}</x-table-th>
+                            <x-table-th>{{ __('CV') }}</x-table-th>
                             <x-table-th>{{ __('Status') }}</x-table-th>
                             <x-table-th></x-table-th>
                         </tr>
@@ -69,6 +70,16 @@
                                 </td>
                                 <x-table-td>
                                     {{ $candidate->salary_range }}
+                                </x-table-td>
+                                <x-table-td>
+                                    @if ($candidate->cv_url)
+                                        <a href="{{ route('candidates.download.cv', $candidate->id) }}"
+                                           class="py-2 px-4 border border-transparent
+                                                    shadow-sm text-sm font-medium rounded-md text-black bg-indigo-50 hover:bg-indigo-100
+                                                    focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                            <i class="far fa-file"></i>
+                                        </a>
+                                    @endif
                                 </x-table-td>
                                 <x-table-td>
                                     <x-badge
