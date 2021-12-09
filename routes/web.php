@@ -22,8 +22,8 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/', [CandidateController::class, 'updateStatus'])->name('status.update');
     });
 
-    Route::resource('candidates', CandidateController::class)->only([
-       'index', 'create', 'store', 'edit', 'destroy'
+    Route::resource('candidates', CandidateController::class)->except([
+       'show', 'update'
     ]);
 });
 

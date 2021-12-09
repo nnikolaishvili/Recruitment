@@ -23,7 +23,6 @@ class HiringStatusesTableSeeder extends Seeder
             'Rejected',
             'Hired',
         ];
-
         $hiringStatusesInsertData = [];
 
         foreach ($hiringStatuses as $hiringStatus) {
@@ -35,7 +34,6 @@ class HiringStatusesTableSeeder extends Seeder
         }
 
         HiringStatus::insert($hiringStatusesInsertData);
-
         Cache::forever('hiring-statuses', HiringStatus::all());
     }
 }

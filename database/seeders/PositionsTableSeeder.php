@@ -26,7 +26,6 @@ class PositionsTableSeeder extends Seeder
             'Project Manager',
             'Human Resources',
         ];
-
         $positionInsertData = [];
 
         foreach ($positions as $position) {
@@ -38,7 +37,6 @@ class PositionsTableSeeder extends Seeder
         }
 
         Position::insert($positionInsertData);
-
         Cache::forever('positions', Position::all());
     }
 }

@@ -46,7 +46,6 @@ class SkillsTableSeeder extends Seeder
         }
 
         Skill::insert($skillInsertData);
-
         Cache::forever('skills', Skill::all());
     }
 }

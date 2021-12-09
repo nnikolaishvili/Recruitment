@@ -33,12 +33,14 @@ class SalaryValidation implements Rule
             return true;
         }
 
+        // the min salary should be less or equal to the max salary
         if ($attribute === self::MIN_SALARY && $value > $this->secondSalary) {
             $this->message = "The min salary must be less than or equal to $this->secondSalary";
 
             return false;
         }
 
+        // the max salary should be greater than the min salary
         if ($attribute === self::MAX_SALARY && $value <= $this->secondSalary) {
             $this->message = "The max salary must be greater than $this->secondSalary";
 

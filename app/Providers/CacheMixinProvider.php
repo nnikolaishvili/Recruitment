@@ -26,6 +26,7 @@ class CacheMixinProvider extends ServiceProvider
     {
         Cache::macro('getOrSet',
             function (string $key, string $model) {
+                // retrieve item from the cache or store it forever if it does not exist
                 return $this->rememberForever($key, fn() => ($model)::all())->pluck('name', 'id')->toArray();
             }
         );

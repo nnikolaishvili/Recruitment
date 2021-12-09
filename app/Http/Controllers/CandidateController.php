@@ -25,7 +25,7 @@ class CandidateController extends Controller
         $validated = $request->validated();
         $searchValue = $validated['search'] ?? '';
         $candidates = Candidate::with(['seniority', 'hiringStatus', 'skills'])
-            ->search($searchValue)
+            ->search($searchValue) // scopeSearch on model
             ->orderByDesc('id')
             ->paginate(Candidate::ITEMS_PER_PAGE)
             ->appends(['search' => $searchValue]);
@@ -43,6 +43,7 @@ class CandidateController extends Controller
      */
     public function create(): View
     {
+        // check CacheMixinProvider
         return view('candidates.create', [
             'positions' => Cache::getOrSet('positions', Position::class),
             'seniorities' => Cache::getOrSet('seniorities', Seniority::class),
@@ -68,7 +69,7 @@ class CandidateController extends Controller
 
         if (isset($validated['skills'])) {
             //  attach() method runs separate queries in DB for each skill, whereas insert() runs 1 query
-            //  $candidate->skills()->attach($skills);
+            //  $candidate->skills()->attach($validated['skills']);
             $skills = [];
             foreach ($validated['skills'] as $skill) {
                 $skills[] = [
@@ -94,7 +95,7 @@ class CandidateController extends Controller
     {
         return view('candidates.edit', [
             'candidate' => $candidate->load('position'),
-            'statuses' => Cache::getOrSet('hiring-statuses', HiringStatus::class),
+            'statuses' => Cache::getOrSet('hiring-statuses', HiringStatus::class), // check CacheMixinProvider
             'candidateStatuses' => $candidate->hiringStatuses()
                 ->orderByDesc('pivot_created_at')
                 ->paginate(HiringStatus::ITEMS_PER_PAGE)
@@ -123,10 +124,11 @@ class CandidateController extends Controller
     {
         $validated = $request->validated();
 
-        if ($validated['hiring_status_id'] === $candidate->hiring_status_id) {
+        if ($validated['hiring_status_id'] == $candidate->hiring_status_id) {
             return back()->withErrors(['current' => 'The selected status is the current one']);
         }
 
+        // If an exception is thrown during the closure, roll back transaction, commit otherwise
         DB::transaction(function () use ($validated, $candidate) {
             $candidate->update([
                 'hiring_status_id' => $validated['hiring_status_id']

@@ -50,6 +50,11 @@ class Candidate extends Model
         'email'
     ];
 
+    /**
+     * The "booted" method of the model.
+     *
+     * @return void
+     */
     public static function booted()
     {
         static::creating(function ($candidate) {

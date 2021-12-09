@@ -2,11 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\HiringStatus;
-use App\Models\Position;
-use App\Models\Seniority;
-use App\Models\Skill;
-use App\Models\User;
+use App\Models\{HiringStatus, Position, Seniority, Skill, User};
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder

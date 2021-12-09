@@ -33,7 +33,6 @@ class SenioritiesTableSeeder extends Seeder
         }
 
         Seniority::insert($senioritiesInsertData);
-
         Cache::forever('seniorities', Seniority::all());
     }
 }
